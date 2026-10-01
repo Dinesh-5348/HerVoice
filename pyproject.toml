@@ -1,10 +1,16 @@
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 addopts = "-q"
+pythonpath = ["."]
 
 [tool.ruff]
 line-length = 88
 target-version = "py312"
+
+[tool.ruff.format]
+indent-style = "space"
+quote-style = "double"
+line-ending = "lf"
 
 [tool.ruff.lint]
 select = ["E", "F", "I", "UP", "B"]

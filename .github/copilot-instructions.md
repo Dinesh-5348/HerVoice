@@ -20,9 +20,11 @@ zero prior digital knowledge. Hackathon challenge: "The Invisible Woman".
    read from the GEMINI_API_KEY env var (model name from GEMINI_MODEL; look up
    the current model ID in the docs). Speech input: send recorded audio
    directly to Gemini. Speech output: browser speechSynthesis in the detected
-   language. Do not use Cloud Run, Cloud Text-to-Speech, Secret Manager, or any
-   billing-gated service.
-6. Stateless server. NO database, NO login. Never store audio or personal data.
+   language; when no matching browser voice exists, use Gemini TTS via the free
+   AI Studio tier with the model from GEMINI_TTS_MODEL. Do not use Cloud Run,
+   Cloud Text-to-Speech, Secret Manager, or any billing-gated service.
+6. Stateless server. NO database, NO login. Never store user audio or personal
+   data. Cache fixed greetings and question audio only in browser memory.
 7. Deployment: Docker container listening on $PORT (default 7860) so it runs
    on Hugging Face Spaces (Docker) or Render free tier. Keep it portable to
    Cloud Run later.

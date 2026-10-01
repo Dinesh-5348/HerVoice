@@ -6,22 +6,26 @@
     {
       "id": "applicant_is_woman",
       "type": "yes_no",
-      "text_key": "applicant_is_woman"
+      "text_key": "applicant_is_woman",
+      "text": "Is the applicant a woman?"
     },
     {
       "id": "applicant_age",
       "type": "number",
-      "text_key": "applicant_age"
+      "text_key": "applicant_age",
+      "text": "How old is the applicant?"
     },
     {
       "id": "poor_household",
       "type": "yes_no",
-      "text_key": "poor_household"
+      "text_key": "poor_household",
+      "text": "Does the applicant belong to a poor household?"
     },
     {
       "id": "household_has_lpg",
       "type": "yes_no",
-      "text_key": "household_has_lpg"
+      "text_key": "household_has_lpg",
+      "text": "Does anyone in the household already have an LPG connection?"
     }
   ],
   "criteria": [
@@ -83,6 +87,6 @@
       "label": "Deprivation declaration"
     }
   ],
-  "where_to_apply": "TODO: verify from official source",
+  "where_to_apply": "Applicants may apply at an LPG distributor of their choice or submit a request through the online portal.",
   "source_url": "https://www.pmuy.gov.in/ujjwala2.html"
 }
