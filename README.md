@@ -88,6 +88,17 @@ black --check app tests
 pytest
 ```
 
+## Vercel Deployment
+
+1. Import this repository into Vercel.
+2. Vercel automatically detects Python and uses `vercel.json` with entrypoint [`api/index.py`](api/index.py).
+3. In project **Settings → Environment Variables**, configure:
+   - `GEMINI_API_KEY`: your Google AI Studio API key
+   - `GEMINI_MODEL`: e.g. `gemini-2.5-flash`
+   - `GEMINI_TTS_MODEL`: e.g. `gemini-3.8-flash-lite-tts`
+   - `DEFAULT_LANG`: `hi-IN`
+4. Deploy. The frontend is served at `/` and routes `/api/turn`, `/api/speak`, `/healthz`, and `/healthz/gemini` run through the serverless function.
+
 ## Hugging Face Spaces Deployment
 
 1. Create a Space and select the **Docker** SDK.
@@ -104,8 +115,10 @@ The deterministic engine is generic: questions, criteria, documents, and the sou
 
 ## Known Limitations
 
+- **Vercel Hobby Plan**: Serverless execution timeout is configured to a maximum of 60 seconds (`maxDuration: 60`). The maximum incoming request body size is 4.5 MB.
 - Browser voices, pronunciation, and availability vary by device. Captions remain visible if a matching voice is unavailable.
 - Gemini TTS fallback also depends on free-tier model access and quota; if it fails, the caption remains visible.
 - Gemini AI Studio free-tier quotas and rate limits may delay or temporarily prevent responses. The service retries briefly, then asks the user to try again.
-- Per-IP rate limiting is in-memory per application process; it is not a shared global limit across replicas.
+- Per-IP rate limiting is in-memory per application process/serverless instance; it is not a shared global limit across distributed replicas.
 - The scheme's short description remains marked `TODO: verify from official source`. The distributor makes the official eligibility decision.
+

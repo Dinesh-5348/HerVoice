@@ -21,4 +21,6 @@ async def health_check() -> dict[str, str]:
 app.include_router(router)
 
 static_dir = Path(__file__).resolve().parent.parent / "static"
+if not static_dir.exists():
+    static_dir = Path.cwd() / "static"
 app.mount("/", StaticFiles(directory=static_dir, html=True), name="static")

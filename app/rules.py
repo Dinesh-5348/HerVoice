@@ -25,6 +25,8 @@ class EligibilityResult(TypedDict):
 
 
 SCHEMES_DIR = Path(__file__).resolve().parent.parent / "data" / "schemes"
+if not SCHEMES_DIR.exists():
+    SCHEMES_DIR = Path.cwd() / "data" / "schemes"
 COMPARATORS: dict[str, Callable[[Any, Any], bool]] = {
     "eq": operator.eq,
     "ne": operator.ne,
