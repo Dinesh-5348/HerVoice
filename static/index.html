@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="hi-IN">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#123f38">
+    <title>HerVoice</title>
+    <link rel="stylesheet" href="/styles.css">
+    <script src="/app.js" defer></script>
+  </head>
+  <body>
+    <main class="app-shell">
+      <header class="brand-mark" aria-hidden="true">
+        <svg viewBox="0 0 48 48" focusable="false">
+          <path d="M8 25h6l6-8v22l-6-8H8z"></path>
+          <path d="M27 20a7 7 0 0 1 0 14M31 15a14 14 0 0 1 0 24"></path>
+        </svg>
+      </header>
+
+      <section id="welcome-screen" class="screen welcome-screen" aria-labelledby="welcome-title">
+        <h1 id="welcome-title" lang="hi-IN"></h1>
+        <div id="language-list" class="language-grid" role="group" aria-label="भाषा चुनें">
+          <button class="language-button is-selected" type="button" data-language="hi-IN" lang="hi-IN" aria-pressed="true">हिन्दी</button>
+          <button class="language-button" type="button" data-language="ta-IN" lang="ta-IN" aria-pressed="false">தமிழ்</button>
+          <button class="language-button" type="button" data-language="te-IN" lang="te-IN" aria-pressed="false">తెలుగు</button>
+          <button class="language-button" type="button" data-language="bn-IN" lang="bn-IN" aria-pressed="false">বাংলা</button>
+          <button class="language-button" type="button" data-language="mr-IN" lang="mr-IN" aria-pressed="false">मराठी</button>
+          <button class="language-button" type="button" data-language="kn-IN" lang="kn-IN" aria-pressed="false">ಕನ್ನಡ</button>
+        </div>
+        <button id="start-button" class="primary-button start-button" type="button">
+          <svg class="button-icon" viewBox="0 0 32 32" aria-hidden="true" focusable="false">
+            <path d="M4 12h6l7-6v20l-7-6H4z"></path>
+            <path d="M22 11a7 7 0 0 1 0 10M25 7a13 13 0 0 1 0 18"></path>
+          </svg>
+          <span id="start-label" lang="hi-IN"></span>
+        </button>
+      </section>
+
+      <section id="guide-screen" class="screen guide-screen" aria-labelledby="caption-heading" hidden>
+        <div class="caption-area" aria-live="polite" aria-atomic="true">
+          <div class="caption-heading-row">
+            <span class="caption-mark" aria-hidden="true">
+              <svg viewBox="0 0 32 32" focusable="false">
+                <path d="M5 13h5l6-5v16l-6-5H5z"></path>
+                <path d="M21 12a6 6 0 0 1 0 8M24 9a10 10 0 0 1 0 14"></path>
+              </svg>
+            </span>
+            <h1 id="caption-heading" lang="hi-IN"></h1>
+          </div>
+          <p id="reply-caption" class="reply-caption" lang="hi-IN"></p>
+          <p id="voice-status" class="voice-status" lang="hi-IN" role="status"></p>
+        </div>
+
+        <button id="mic-button" class="mic-button" type="button" aria-pressed="false">
+          <svg viewBox="0 0 64 64" aria-hidden="true" focusable="false">
+            <rect x="24" y="8" width="16" height="31" rx="8"></rect>
+            <path d="M17 31v3a15 15 0 0 0 30 0v-3M32 49v8M23 57h18"></path>
+          </svg>
+          <span id="mic-label" lang="hi-IN"></span>
+        </button>
+
+        <form id="text-form" class="text-form" hidden>
+          <label id="text-label" for="text-input" lang="hi-IN"></label>
+          <div class="text-entry-row">
+            <input id="text-input" name="text" type="text" autocomplete="off" maxlength="4000" required>
+            <button id="send-button" class="send-button" type="submit" lang="hi-IN"></button>
+          </div>
+        </form>
+      </section>
+
+      <section id="final-screen" class="screen final-screen" aria-labelledby="final-heading" hidden>
+        <p class="kicker" id="final-kicker" lang="hi-IN"></p>
+        <h1 id="final-heading" lang="hi-IN"></h1>
+        <p id="final-caption" class="reply-caption final-caption" lang="hi-IN"></p>
+        <ul id="document-checklist" class="document-checklist" aria-label="दस्तावेज़ों की सूची"></ul>
+        <button id="replay-button" class="primary-button replay-button" type="button" lang="hi-IN"></button>
+      </section>
+    </main>
+  </body>
+</html>

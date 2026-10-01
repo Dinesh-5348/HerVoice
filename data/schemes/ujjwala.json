@@ -1,0 +1,88 @@
+{
+  "id": "ujjwala",
+  "name": "Pradhan Mantri Ujjwala Yojana (PMUY)",
+  "short_description": "TODO: verify from official source",
+  "questions": [
+    {
+      "id": "applicant_is_woman",
+      "type": "yes_no",
+      "text_key": "applicant_is_woman"
+    },
+    {
+      "id": "applicant_age",
+      "type": "number",
+      "text_key": "applicant_age"
+    },
+    {
+      "id": "poor_household",
+      "type": "yes_no",
+      "text_key": "poor_household"
+    },
+    {
+      "id": "household_has_lpg",
+      "type": "yes_no",
+      "text_key": "household_has_lpg"
+    }
+  ],
+  "criteria": [
+    {
+      "question_id": "applicant_is_woman",
+      "operator": "eq",
+      "value": true
+    },
+    {
+      "question_id": "applicant_age",
+      "operator": "gte",
+      "value": 18
+    },
+    {
+      "question_id": "poor_household",
+      "operator": "eq",
+      "value": true
+    },
+    {
+      "question_id": "household_has_lpg",
+      "operator": "eq",
+      "value": false
+    }
+  ],
+  "documents": [
+    {
+      "id": "kyc_form",
+      "icon_name": "file-text",
+      "label": "KYC application form"
+    },
+    {
+      "id": "applicant_aadhaar",
+      "icon_name": "id-card",
+      "label": "Applicant Aadhaar copy"
+    },
+    {
+      "id": "address_proof",
+      "icon_name": "map-pin",
+      "label": "Address proof if current address differs from Aadhaar"
+    },
+    {
+      "id": "family_composition",
+      "icon_name": "users",
+      "label": "State ration card or government family-composition document"
+    },
+    {
+      "id": "adult_family_aadhaar",
+      "icon_name": "id-card",
+      "label": "Aadhaar copies for adult family members listed on that document"
+    },
+    {
+      "id": "bank_details",
+      "icon_name": "landmark",
+      "label": "Bank passbook copy or cancelled cheque"
+    },
+    {
+      "id": "deprivation_declaration",
+      "icon_name": "file-check",
+      "label": "Deprivation declaration"
+    }
+  ],
+  "where_to_apply": "TODO: verify from official source",
+  "source_url": "https://www.pmuy.gov.in/ujjwala2.html"
+}
