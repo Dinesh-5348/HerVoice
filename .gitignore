@@ -1,8 +1,15 @@
 .env
+.env.local
 .venv/
 __pycache__/
+*.py[cod]
+*.pyc
 .pytest_cache/
 .ruff_cache/
-*.py[cod]
+.vercel/
+.idea/
+.vscode/
+*.log
+.DS_Store
 .coverage
 htmlcov/
