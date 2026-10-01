@@ -146,7 +146,11 @@ def test_understanding_failure_returns_localized_repeat_and_keeps_state(
     assert response.status_code == 200
     assert response.json()["error_code"] == "malformed_output"
     assert response.json()["reply_text"] == "எனக்குப் புரியவில்லை."
-    assert response.json()["state"] == {"answers": {}, "step": 0}
+    assert response.json()["state"] == {
+        "answers": {},
+        "step": 0,
+        "recent_turns": [],
+    }
     assert response.json()["done"] is False
 
 
@@ -157,7 +161,7 @@ def test_response_failure_returns_localized_retry_and_keeps_state(monkeypatch) -
         raise RuntimeError("Gemini unavailable")
 
     monkeypatch.setattr(routes, "respond", failed_response)
-    prior_state = {"answers": {}, "step": 0}
+    prior_state = {"answers": {}, "step": 0, "recent_turns": []}
 
     response = client.post(
         "/api/turn",
@@ -166,7 +170,9 @@ def test_response_failure_returns_localized_retry_and_keeps_state(monkeypatch) -
 
     assert response.status_code == 503
     assert response.json()["error_code"] == "unavailable"
-    assert response.json()["reply_text"] == "சேவை இப்போது கிடைக்கவில்லை. பின்னர் முயற்சிக்கவும்."
+    assert (
+        response.json()["reply_text"] == "சேவை இப்போது கிடைக்கவில்லை. பின்னர் முயற்சிக்கவும்."
+    )
     assert response.json()["state"] == prior_state
 
 
@@ -202,9 +208,7 @@ def test_gemini_failure_types_return_localized_messages(
 
     monkeypatch.setattr(routes, "understand", failed_understanding)
 
-    response = client.post(
-        "/api/turn", json={"text": "yes", "lang_hint": "hi-IN"}
-    )
+    response = client.post("/api/turn", json={"text": "yes", "lang_hint": "hi-IN"})
 
     assert response.status_code == status
     assert response.json()["error_code"] == error_code

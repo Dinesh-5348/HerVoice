@@ -61,10 +61,18 @@ def _classify_provider_error(error: Exception) -> GeminiServiceError:
         status_code = None
     description = str(error).casefold()
     if status_code in {401, 403} or "api key not valid" in description:
-        return GeminiServiceError("invalid_key", "Gemini credentials were rejected.", 503)
+        return GeminiServiceError(
+            "invalid_key", "Gemini credentials were rejected.", 503
+        )
     if status_code == 404 or "model not found" in description:
-        return GeminiServiceError("invalid_model", "The configured Gemini model was not found.", 503)
-    if status_code == 429 or "resource_exhausted" in description or "rate limit" in description:
+        return GeminiServiceError(
+            "invalid_model", "The configured Gemini model was not found.", 503
+        )
+    if (
+        status_code == 429
+        or "resource_exhausted" in description
+        or "rate limit" in description
+    ):
         return GeminiServiceError("rate_limited", "Gemini rate limit was reached.", 429)
     return GeminiServiceError("unavailable", "Gemini is temporarily unavailable.", 503)
 
@@ -137,9 +145,13 @@ async def understand(
     language = lang_hint or get_default_language()
     variants = SUPPORTED_LANGS[language]
     untrusted_input = {
-        "message": text if text is not None else "Audio is attached as a separate part.",
+        "message": (
+            text if text is not None else "Audio is attached as a separate part."
+        ),
         "recent_turns": (recent_turns or [])[-4:],
     }
+    yes_json = json.dumps(variants["yes_variants"], ensure_ascii=False)
+    no_json = json.dumps(variants["no_variants"], ensure_ascii=False)
     prompt = (
         "You classify one turn in a government-scheme guide. Return detected_lang, "
         "intent, and answer. intent must be answer, question, greeting, unclear, or "
@@ -147,8 +159,8 @@ async def understand(
         f"{json.dumps(question, ensure_ascii=False)}. Supported language codes are "
         f"{', '.join(SUPPORTED_LANGS)}. The selected language hint is {language}; "
         "use the detected language when clear, otherwise keep this hint. "
-        f"Yes variants include {json.dumps(variants['yes_variants'], ensure_ascii=False)}. "
-        f"No variants include {json.dumps(variants['no_variants'], ensure_ascii=False)}. "
+        f"Yes variants include {yes_json}. "
+        f"No variants include {no_json}. "
         "Also accept English yes/no variants. "
         "For number questions, extract the numeric age including spoken/native-script "
         "digits. Only intent=answer may include an answer. For every other intent, "
@@ -255,7 +267,9 @@ async def respond(
         try:
             retry_prompt = prompt
             if attempt:
-                retry_prompt += " Return valid JSON with no more than three short sentences."
+                retry_prompt += (
+                    " Return valid JSON with no more than three short sentences."
+                )
             raw_reply = await _generate_with_retry(
                 retry_prompt,
                 audio_bytes=None,
@@ -269,7 +283,9 @@ async def respond(
             return reply
         except (ValidationError, ValueError) as error:
             if attempt:
-                logger.error("gemini response malformed; exception_type=%s", type(error).__name__)
+                logger.error(
+                    "gemini response malformed; exception_type=%s", type(error).__name__
+                )
                 raise MalformedModelOutput() from error
         except GeminiServiceError:
             raise

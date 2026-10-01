@@ -47,9 +47,7 @@ def _append_recent_turns(
     return recent_turns[-4:]
 
 
-def _log_stage_error(
-    stage: str, error: Exception, turn: TurnRequest
-) -> None:
+def _log_stage_error(stage: str, error: Exception, turn: TurnRequest) -> None:
     message = str(error)
     try:
         api_key = get_gemini_api_key()
@@ -57,9 +55,7 @@ def _log_stage_error(
         api_key = ""
     if api_key:
         message = message.replace(api_key, "[redacted]")
-    private_texts = [turn.text or ""] + [
-        item.text for item in turn.state.recent_turns
-    ]
+    private_texts = [turn.text or ""] + [item.text for item in turn.state.recent_turns]
     for private_text in private_texts:
         if private_text:
             message = message.replace(private_text, "[user text redacted]")
@@ -221,6 +217,22 @@ async def api_turn(turn: TurnRequest) -> TurnResponse | JSONResponse:
         speech_cache_key=next_question["id"] if next_question is not None else None,
         question_id=next_question["id"] if next_question is not None else None,
         question_type=next_question["type"] if next_question is not None else None,
+    )
+
+
+@router.post("/api/speak")
+async def api_speak(request: SpeechRequest) -> Response:
+    try:
+        audio = await synthesize_speech(request.text, request.lang)
+    except Exception as error:
+        logger.error("speech generation failed: %s", error)
+        raise HTTPException(
+            status_code=503, detail="Speech generation failed."
+        ) from error
+    return Response(
+        content=audio,
+        media_type="audio/wav",
+        headers={"Cache-Control": "no-store"},
     )
 
 
