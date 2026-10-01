@@ -1,0 +1,5 @@
+"""Entrypoint exposing the FastAPI app for Vercel deployment."""
+
+from app.main import app
+
+__all__ = ["app"]

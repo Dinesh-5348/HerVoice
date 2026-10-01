@@ -21,7 +21,10 @@ dev = [
 ]
 
 [tool.setuptools.packages.find]
-include = ["app*", "api*"]
+include = ["app*"]
+
+[tool.setuptools]
+py-modules = ["index"]
 
 
 [tool.pytest.ini_options]

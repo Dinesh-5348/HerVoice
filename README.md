@@ -161,7 +161,7 @@ Eligibility is evaluated strictly by the deterministic rules engine in [`app/rul
    - `GEMINI_MODEL` (`gemini-3.5-flash`)
    - `GEMINI_TTS_MODEL` (`gemini-3.8-flash-tts`)
    - `DEFAULT_LANG` (`hi-IN`)
-4. Deploy. Vercel automatically uses [`vercel.json`](vercel.json) and routes requests through [`api/index.py`](api/index.py).
+4. Deploy. Vercel automatically uses [`vercel.json`](vercel.json) and routes requests through [`index.py`](index.py).
 
 ### Docker Deployment
 
