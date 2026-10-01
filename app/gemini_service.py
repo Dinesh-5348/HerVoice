@@ -95,15 +95,19 @@ def _generate_structured_content_sync(
         )
     elif text is not None:
         content.append(types.Part.from_text(text=text))
-    response = genai.Client(api_key=get_gemini_api_key()).models.generate_content(
-        model=get_gemini_model(),
-        contents=content,
-        config=types.GenerateContentConfig(
-            response_mime_type="application/json",
-            response_schema=response_schema,
-        ),
-    )
-    return response.text or ""
+    client = genai.Client(api_key=get_gemini_api_key())
+    try:
+        response = client.models.generate_content(
+            model=get_gemini_model(),
+            contents=content,
+            config=types.GenerateContentConfig(
+                response_mime_type="application/json",
+                response_schema=response_schema,
+            ),
+        )
+        return response.text or ""
+    finally:
+        client.close()
 
 
 async def _generate_with_retry(*args: Any, **kwargs: Any) -> str:
@@ -299,14 +303,16 @@ def _gemini_health_check_sync() -> None:
     from google.genai import types
 
     client = genai.Client(api_key=get_gemini_api_key())
-    response = client.models.generate_content(
-        model=get_gemini_model(),
-        contents="Reply OK.",
-        config=types.GenerateContentConfig(max_output_tokens=2),
-    )
-    client.close()
-    if not response.text:
-        raise ValueError("Gemini returned no health-check text.")
+    try:
+        response = client.models.generate_content(
+            model=get_gemini_model(),
+            contents="Reply OK.",
+            config=types.GenerateContentConfig(max_output_tokens=100),
+        )
+        if not response.text:
+            raise ValueError("Gemini returned no health-check text.")
+    finally:
+        client.close()
 
 
 async def gemini_health_check() -> None:
@@ -323,27 +329,29 @@ def _synthesize_speech_sync(text: str, language: str) -> bytes:
     if language not in SUPPORTED_LANGS:
         raise ValueError("Speech language is not supported.")
     client = genai.Client(api_key=get_gemini_api_key())
-    interaction = client.interactions.create(
-        model=get_gemini_tts_model(),
-        input=[
-            {
-                "type": "user_input",
-                "content": [
-                    {
-                        "type": "text",
-                        "text": text,
-                    }
-                ],
-            }
-        ],
-        response_format={"type": "audio"},
-        generation_config={"speech_config": [{"voice": "Kore"}]},
-    )
-    client.close()
-    audio_data = interaction.output_audio.data
-    if not audio_data:
-        raise ValueError("Gemini returned no speech audio.")
-    return base64.b64decode(audio_data, validate=True)
+    try:
+        interaction = client.interactions.create(
+            model=get_gemini_tts_model(),
+            input=[
+                {
+                    "type": "user_input",
+                    "content": [
+                        {
+                            "type": "text",
+                            "text": text,
+                        }
+                    ],
+                }
+            ],
+            response_format={"type": "audio"},
+            generation_config={"speech_config": [{"voice": "Kore"}]},
+        )
+        audio_data = interaction.output_audio.data
+        if not audio_data:
+            raise ValueError("Gemini returned no speech audio.")
+        return base64.b64decode(audio_data, validate=True)
+    finally:
+        client.close()
 
 
 async def synthesize_speech(text: str, language: str) -> bytes:
